@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from '../api-client'
+import { useAppContext } from "../contexts/Appcontext";
+import { useNavigate } from "react-router-dom";
 export type RegisterFormData = {
   firstName: string;
   lastName: string;
@@ -10,13 +12,20 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
+    const {showToast} = useAppContext();
+    const queryClient = useQueryClient();
+
+    const navigate = useNavigate();
   const { register,watch,handleSubmit,formState:{errors} } = useForm<RegisterFormData>();
   const mutation = useMutation(apiClient.register,{
-    onSuccess: () =>{
-        console.log("Registration successfull!!")
+    onSuccess:async () =>{
+        showToast({type:"SUCCESS",message:"Registration Successfull!"});
+        await queryClient.invalidateQueries("validateToken");
+        navigate("/")
     },
     onError:(error:Error) => {
-        console.log({message:error.message})
+        showToast({type:"ERROR",message:error.message})
+
     }
 
   })
@@ -52,7 +61,7 @@ const Register = () => {
         </label>
       </div>
       <label className="text-gray-700 font-bold text-sm flex-1">
-        Email{" "}
+        Email
         <input
           type="email"
           className="border rounded w-full py-1 px-2 font-normal"
@@ -65,7 +74,7 @@ const Register = () => {
       </label>
 
       <label className="text-gray-700 font-bold text-sm flex-1">
-        Password{" "}
+        Password
         <input
           type="password"
           className="border rounded w-full py-1 px-2 font-normal"

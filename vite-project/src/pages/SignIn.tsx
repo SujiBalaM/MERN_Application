@@ -24,7 +24,7 @@ const SignIn = () => {
       navigate("/");
     },
     onError: (error: Error) => {
-      showToast({ message: "Failed to login", type: "ERROR" });
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 

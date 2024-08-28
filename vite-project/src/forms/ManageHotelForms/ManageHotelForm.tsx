@@ -21,7 +21,7 @@ export type HotelType = {
 };
 type Props =  {
 onSave:(hotelFormData:FormData)=>void,
-isLoading:boolean
+isLoading:boolean;
 } 
 const ManageHotelForm = ({onSave,isLoading}:Props) => {
   const formMethods = useForm<HotelType>();
@@ -35,6 +35,7 @@ const ManageHotelForm = ({onSave,isLoading}:Props) => {
     formData.append("city",formDataJson.city);
     formData.append("country",formDataJson.country);
     formData.append("description",formDataJson.description);
+    formData.append("type", formDataJson.type);
     formData.append("pricePerNight",formDataJson.pricePerNight.toString());
     formData.append("starRating",formDataJson.starRating.toString());
     formData.append("adultCount",formDataJson.adultCount.toString());
@@ -47,9 +48,7 @@ const ManageHotelForm = ({onSave,isLoading}:Props) => {
     }
 
     Array.from(formDataJson.imageFiles).forEach((e) => formData.append(`imageFiles`,e));
-    console.log(formData)
     onSave(formData)
-    console.log(formData)
 
 
   })

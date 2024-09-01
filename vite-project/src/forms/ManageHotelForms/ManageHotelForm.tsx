@@ -4,8 +4,10 @@ import TypeSection from "./TypeSection";
 import FacilitiesSection from "./FacilitiesSection";
 import GuestSection from "./GuestSection";
 import ImagesSection from "./ImagesSection";
+import { HotelType } from "../../../../backend/src/shared/type";
+import { useEffect } from "react";
 
-export type HotelType = {
+export type HotelTypeData = {
   name: string;
   city: string;
   country: string;
@@ -20,16 +22,23 @@ export type HotelType = {
   childCount: number;
 };
 type Props =  {
+  hotel?:HotelType,
 onSave:(hotelFormData:FormData)=>void,
 isLoading:boolean;
 } 
-const ManageHotelForm = ({onSave,isLoading}:Props) => {
-  const formMethods = useForm<HotelType>();
-  const {handleSubmit} = formMethods;
+const ManageHotelForm = ({onSave,isLoading,hotel}:Props) => {
+  const formMethods = useForm<HotelTypeData>();
+  const {handleSubmit,reset} = formMethods;
 
-  const onSubmit = handleSubmit((formDataJson:HotelType) =>{
-    console.log(formDataJson)
+  useEffect(() => {
+    reset(hotel)
+  },[hotel,reset])
+
+  const onSubmit = handleSubmit((formDataJson:HotelTypeData) =>{
     const formData = new FormData();
+    if(hotel){
+      formData.append("hotelId",hotel._id)
+    }
     //create new formData object and call API
     formData.append("name",formDataJson.name);
     formData.append("city",formDataJson.city);

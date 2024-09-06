@@ -13,7 +13,6 @@ export const hotelOptions = [
     "Motel",
     "All Inclusive",
     "Pet Friendly",
-    "All Inclusive",
 ]
 
 export const hotelFacilities = [

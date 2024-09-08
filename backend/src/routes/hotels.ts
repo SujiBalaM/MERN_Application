@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import verifyToken from "../middleware/auth";
 import Hotel from "../models/hotels";
 import { HotelSearchResponse } from "../shared/type";
+import { param, validationResult } from "express-validator";
 
 const router = express.Router();
 
@@ -46,7 +47,22 @@ router.get("/search", async (req: Request, res: Response) => {
     res.status(500).send({ message: "Something went wrong" });
   }
 });
+router.get("/:id",[param("id").notEmpty().withMessage("ID is required")],async (req:Request,res:Response) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors:errors.array()})
+    }
+    const id = req.params.id.toString();
 
+    try {
+        const hotel = await Hotel.findById(id);
+        return res.json(hotel)
+
+    } catch(error) {
+        return res.status(500).send({message:"Something went wrong"})
+    }
+
+})
 const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
